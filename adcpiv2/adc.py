@@ -1,10 +1,8 @@
 #!/usr/bin/env python3
-# read abelectronics ADC Pi V2 board inputs with repeating reading from each channel.
-# # Requries Python 2.7
+# read abelectronics ADC Pi V2 board inputs with repeating reading from each channel on a BeagleBone Black.
 # Requires SMBus 
-# I2C API depends on I2C support in the kernel
 
-# Version 1.0  - 06/02/2013
+# Version 1.0  - 24/07/2013
 # Version History:
 # 1.0 - Initial Release
 
@@ -15,7 +13,6 @@
 # address = adc_address1 or adc_address2 - Hex address of I2C chips as configured by board header pins.
 
 from smbus import SMBus
-import re
 
 adc_address1 = 0x68
 adc_address2 = 0x69
@@ -31,18 +28,7 @@ adcreading.append(0x00)
 varDivisior = 64 # from pdf sheet on adc addresses and config
 varMultiplier = (2.4705882/varDivisior)/1000
 
-# detect i2C port number and assign to i2c_bus
-for line in open('/proc/cpuinfo').readlines():
-    m = re.match('(.*?)\s*:\s*(.*)', line)
-    if m:
-        (name, value) = (m.group(1), m.group(2))
-        if name == "Revision":
-            if value [-4:] in ('0002', '0003'):
-                i2c_bus = 0
-            else:
-                i2c_bus = 1
-            break
-               
+i2c_bus = 1             
 
 bus = SMBus(i2c_bus)
  
